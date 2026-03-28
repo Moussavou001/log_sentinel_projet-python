@@ -16,10 +16,10 @@
 
 ```bash
 # Se placer dans le bon dossier
-cd "H:\Mon Drive\NAOMIE_MASTER\Python\log_sentinel_projet-python\log_sentinel"
+cd "D:\Python\log_sentinel_projet-python\log_sentinel"
 
 # Activer l'environnement virtuel (Windows)
-env\Scripts\activate
+D:\Python\env\Scripts\activate
 
 # Vérifier que Python est bien actif
 python --version
@@ -50,7 +50,33 @@ dir /s /b *.py
 
 ---
 
-## Étape 2 — Analyse standard du log (3 min)
+## Étape 2 — Interface Web Streamlit (2 min) ⭐ Recommandée
+
+### Commande à exécuter :
+
+```bash
+streamlit run app.py
+```
+
+Le tableau de bord s'ouvre automatiquement dans le navigateur (`http://localhost:8501`).
+
+> **Ce qu'on dit au jury :**
+>
+> *"Log Sentinel dispose de deux interfaces : une CLI pour les environnements
+> sans interface graphique, et un tableau de bord web Streamlit pour une
+> démonstration visuelle. Elles partagent exactement le même pipeline d'analyse."*
+
+### Points à montrer :
+
+1. **Cliquer sur "Utiliser le fichier démo"** — l'analyse se lance instantanément
+2. **Onglet Alertes** — filtrer par type d'attaque avec le multiselect
+3. **Onglet Statistiques** — graphiques interactifs (Top IPs, codes HTTP)
+4. **Onglet OSINT** — activer l'option dans la barre latérale puis relancer
+5. **Onglet Rapport HTML** — générer et télécharger le rapport en un clic
+
+---
+
+## Étape 3 — Analyse standard CLI (3 min)
 
 ### Commande à exécuter :
 
@@ -89,7 +115,7 @@ Pointer chaque type au jury :
 
 ---
 
-## Étape 3 — Option OSINT (2 min)
+## Étape 4 — Option OSINT (2 min)
 
 ### Commande à exécuter :
 
@@ -105,7 +131,7 @@ python main.py -f samples/sample_access.log --check-ip
 
 ---
 
-## Étape 4 — Rapport HTML (2 min)
+## Étape 5 — Rapport HTML (2 min)
 
 ### Commande à exécuter :
 
@@ -127,7 +153,7 @@ reports/report.html
 
 ---
 
-## Étape 5 — Options avancées CLI (1 min)
+## Étape 6 — Options avancées CLI (1 min)
 
 ### Personnaliser les seuils :
 
@@ -144,7 +170,7 @@ python main.py -f samples/sample_access.log --no-report
 
 ---
 
-## Étape 6 — Tests unitaires (1 min)
+## Étape 7 — Tests unitaires (1 min)
 
 ```bash
 python -m unittest discover -s tests -v
@@ -175,6 +201,12 @@ python -m unittest discover -s tests -v
 > comme `UNION SELECT` pour SQLi. Par seuil : on compte les occurrences —
 > plus de 5 erreurs 401 depuis la même IP déclenche une alerte brute-force."*
 
+**Q : Pourquoi deux interfaces (CLI et Streamlit) ?**
+> *"La CLI est adaptée à un serveur sans interface graphique — un analyste SOC
+> peut l'intégrer dans un script ou un cron job. Streamlit est idéal pour
+> une démonstration ou une utilisation par un non-technicien. Les deux
+> partagent exactement le même pipeline `src/` — aucune duplication de logique."*
+
 **Q : Pourquoi avoir utilisé `rich` ?**
 > *"`rich` permet d'afficher des tableaux colorés, des barres de progression
 > et des panels dans le terminal — ce qui rend l'outil plus professionnel
@@ -192,16 +224,17 @@ python -m unittest discover -s tests -v
 
 ---
 
-## Ordre recommandé — Chrono 10 min
+## Ordre recommandé — Chrono 12 min
 
 | Temps | Action |
 |-------|--------|
 | 0:00 – 1:00 | Présentation projet + architecture |
-| 1:00 – 4:00 | Démo analyse standard + commentaire des alertes |
-| 4:00 – 6:00 | Option OSINT + rapport HTML |
-| 6:00 – 7:00 | Options CLI avancées |
-| 7:00 – 8:00 | Tests unitaires |
-| 8:00 – 10:00 | Questions / réponses |
+| 1:00 – 3:00 | Interface web Streamlit (démo visuelle) |
+| 3:00 – 6:00 | Démo CLI + commentaire des alertes |
+| 6:00 – 8:00 | Option OSINT + rapport HTML |
+| 8:00 – 9:00 | Options CLI avancées |
+| 9:00 – 10:00 | Tests unitaires |
+| 10:00 – 12:00 | Questions / réponses |
 
 ---
 
