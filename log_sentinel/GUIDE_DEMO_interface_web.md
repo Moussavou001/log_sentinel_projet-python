@@ -82,6 +82,43 @@ Montrer et commenter chaque élément :
 
 ---
 
+## Notre logique d'automatisation originale — À souligner au jury
+
+> *La consigne exigeait "coder votre propre logique d'automatisation" — voici exactement ce qui tourne derrière l'interface web, codé from scratch, sans aucune bibliothèque de détection externe.*
+
+### Ce que l'interface cache (et qu'on doit expliquer)
+
+Quand l'utilisateur clique sur "Utiliser le fichier démo", `app.py` déclenche `_executer_pipeline()` qui enchaîne **5 traitements entièrement codés à la main** :
+
+| Étape | Module | Logique originale |
+|---|---|---|
+| Détection de format | `loader.py` | Algorithme de vote par score sur 10 lignes |
+| Parsing structuré | `parser.py` | Regex Combined Log → dataclass `LogEntry` |
+| Détection par signatures | `detector.py` | 6 patterns regex sur URI et User-Agent |
+| Détection comportementale | `detector.py` | Brute-force (seuil 401/403) + scan (URIs + 404) |
+| Score de risque | `app.py` | Formule pondérée à 3 composantes, plafonnée à 100 |
+
+### Exemple concret — détection brute-force
+```python
+# Logique codée dans detector.py
+fail_counts: Counter = Counter()
+for entry in entries:
+    if str(entry["status"]) in ("401", "403"):
+        fail_counts[entry["ip"]] += 1
+# Si l'IP 192.168.1.100 a 10 échecs et que bf_threshold = 5 → alerte
+```
+> *"Le seuil affiché dans la sidebar correspond directement à ce paramètre. Le changer dans l'interface modifie en temps réel le comportement du détecteur."*
+
+### Exemple concret — détection de scan
+```python
+# Double critère — évite les faux positifs sur les crawlers légitimes
+if unique_uris > scan_threshold and not_found_ratio > 0.5:
+    # → Alert scan pour l'IP 10.0.0.55
+```
+> *"L'interface n'est que la vitrine — toute l'intelligence de détection est dans les modules `src/`, que je partage aussi avec la CLI."*
+
+---
+
 ## Etape 3 — Analyse du fichier démo (2 minutes)
 
 ### Actions à effectuer

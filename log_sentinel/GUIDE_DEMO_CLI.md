@@ -69,6 +69,68 @@ log_sentinel/
 
 ---
 
+## Notre logique d'automatisation originale — À souligner au jury
+
+> *La consigne exigeait "coder votre propre logique d'automatisation" — voici exactement ce qui a été codé from scratch, sans aucune bibliothèque de détection externe.*
+
+### 1. Détection de format automatique (loader.py)
+Algorithme de **vote par score** sur les 10 premières lignes du fichier :
+```python
+scores = {"nginx": 0, "apache": 0, "syslog": 0}
+for ligne in echantillon:
+    if _NGINX_PATTERN.match(ligne):  scores["nginx"]  += 1
+    elif _APACHE_PATTERN.match(ligne): scores["apache"] += 1
+    elif _SYSLOG_PATTERN.match(ligne): scores["syslog"] += 1
+return max(scores, key=lambda fmt: scores[fmt])  # format gagnant
+```
+> *"Aucune lib externe — j'ai codé moi-même cet algorithme de reconnaissance de format."*
+
+### 2. Détection d'attaques par signatures (detector.py)
+6 patterns regex compilés **à la main**, appliqués intelligemment sur l'URI ou le User-Agent selon le type :
+```python
+ATTACK_PATTERNS = {
+    "sql_injection":      re.compile(r"UNION\s+SELECT|OR\s+1\s*=\s*1|DROP\s+TABLE..."),
+    "xss":                re.compile(r"<script|javascript:|onerror\s*=..."),
+    "path_traversal":     re.compile(r"\.\./|/etc/passwd|/etc/shadow..."),
+    "command_injection":  re.compile(r";ls|\|cat|\$\(|&&rm..."),
+    "sensitive_files":    re.compile(r"\.env|\.git|wp-config\.php..."),
+    "malicious_ua":       re.compile(r"sqlmap|nikto|nmap|burp..."),
+}
+```
+> *"Chaque règle de détection est une décision technique que j'ai prise : quels patterns représentent une vraie attaque sans générer de faux positifs ?"*
+
+### 3. Détection brute-force par seuil (detector.py)
+```python
+# Comptage des échecs 401/403 par IP — logique 100% personnalisée
+fail_counts: Counter = Counter()
+for entry in entries:
+    if str(entry["status"]) in ("401", "403"):
+        fail_counts[entry["ip"]] += 1
+# Alerte si le seuil configurable est dépassé
+for ip, count in fail_counts.items():
+    if count > self.CONFIG["BRUTE_FORCE_THRESHOLD"]:
+        # → Alert brute_force
+```
+
+### 4. Détection de scan — double critère combiné (detector.py)
+```python
+# Ma règle : > N URIs distinctes ET > 50% de réponses 404
+if unique_uris > scan_threshold and not_found_ratio > 0.5:
+    # → Alert scan
+```
+> *"Ce double critère évite les faux positifs : un crawler légitime actif ne génère pas 50% de 404."*
+
+### 5. Score de risque — formule originale (main.py)
+```python
+alert_score   = min(50, alert_count * 2)          # plafonné à 50
+error_score   = min(30, error_rate * 0.6)          # plafonné à 30
+heavy_penalty = 20 if attaques_graves_présentes else 0  # bonus criticité
+risk_score    = min(100, alert_score + error_score + heavy_penalty)
+```
+> *"Formule pondérée que j'ai conçue pour refléter à la fois la quantité et la gravité des menaces."*
+
+---
+
 ## Étape 2 — Analyse standard (3 min)
 
 ### Commande à taper
