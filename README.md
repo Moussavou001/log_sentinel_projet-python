@@ -242,6 +242,9 @@ OK
 
 ## Auteur
 
-Projet de fin de module — Cybersécurité Python
-Thème : **Analyse de Logs / Blue Team**
-Date de remise : 1 avril 2026
+| Champ | Détail |
+|-------|--------|
+| **Nom** | NAOMIE NGWIDJOMBY MOUSSAVOU |
+| **Module** | Python / Master 1 Cybersécurité |
+| **Thème** | Analyse de Logs / Blue Team |
+| **Date de remise** | 1 avril 2026 |
