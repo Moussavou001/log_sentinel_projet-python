@@ -1,0 +1,29 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+.Python
+
+# Environnement virtuel
+env/
+venv/
+.env/
+
+# Reports générés
+log_sentinel/reports/*.html
+
+# Windows
+desktop.ini
+Thumbs.db
+*.lnk
+
+# IDE
+.vscode/
+.idea/
+*.code-workspace
+
+# Distribution
+*.egg-info/
+dist/
+build/
