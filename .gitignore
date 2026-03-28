@@ -23,6 +23,9 @@ Thumbs.db
 .idea/
 *.code-workspace
 
+# Claude Code
+CLAUDE.md
+
 # Distribution
 *.egg-info/
 dist/
